@@ -1,1 +1,89 @@
 @import "tailwindcss";
+
+.smooth-wrapper {
+    height: 100%;
+    overflow: hidden;
+}
+
+.smooth-content {
+    will-change: transform;
+}
+
+.spacer .container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stacked-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    margin-left: 20%;
+}
+
+.card {
+    width: 100%;
+    height: auto;
+    background-color: white;
+    margin: 40px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: black;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 30px;
+
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.number {
+    font-size: 8rem;
+    font-weight: bold;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    width: 60%;
+    text-align: start;
+}
+
+.services-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+
+    color: white;
+    margin-bottom: 10px;
+}
+
+.services-list .service {
+    font-size: 24px;
+    background-color: rgb(71, 68, 68);
+    width: 95%;
+    margin-left: 20px;
+    border-radius: 7px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    color: rgba(255, 255, 255, 0.67);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

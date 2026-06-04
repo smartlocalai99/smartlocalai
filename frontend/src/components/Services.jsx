@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const categories = [
     {
@@ -23,6 +25,7 @@ const categories = [
             "AI-based Manufacturing Insights (Inside ERP)",
             "Voice/AI Search Optimization",
             "Smart Reporting Systems (AI dashboards)",
+            "AEO (AI / Voice Search Optimization)",
         ],
     },
     {
@@ -31,7 +34,6 @@ const categories = [
         services: [
             "Website Development",
             "SEO (Search Engine Optimization)",
-            "AEO (AI / Voice Search Optimization)",
             "Digital Marketing (Social Media Campaigns)",
             "Google My Business Setup",
             "WhatsApp Bulk Messaging",
@@ -64,6 +66,7 @@ const Services = () => {
     const sectionRef = useRef(null);
     const textRef = useRef(null);
     const textWrapperRef = useRef(null);
+    const container = useRef(null); // FIX 1: moved to component top level (was inside gsap.context)
     // One ref per pinned wrapper (outer div, full-viewport height)
     const cardWrappers = useRef([]);
     // One ref per inner card box (the animated element)
@@ -80,7 +83,8 @@ const Services = () => {
             ══════════════════════════════════════════════════════ */
             const textWidth = textRef.current.scrollWidth;
             const viewportWidth = window.innerWidth;
-            const maxScroll = Math.max(textWidth - viewportWidth + 50, 0);
+            // Stop exactly when the last character ('e' in Provide) reaches the right edge
+            const maxScroll = Math.max(textWidth - viewportWidth, 0);
 
             gsap.ticker.lagSmoothing(1000, 16);
 
@@ -90,12 +94,12 @@ const Services = () => {
                 end: () => `+=${maxScroll}`,
                 scrub: 1,
                 pin: true,
+                pinSpacing: true,  // inserts spacer = maxScroll px, so cards section is only reachable AFTER this animation ends
                 anticipatePin: 1,
                 fastScrollEnd: true,
                 onUpdate: (self) => {
                     gsap.set(textRef.current, { x: -self.progress * maxScroll });
                 },
-
             });
 
             /* ══════════════════════════════════════════════════════
@@ -112,58 +116,70 @@ const Services = () => {
                    2. Service rows appearing one by one
                • No card ever fights another — they're serial.
             ══════════════════════════════════════════════════════ */
-            categories.forEach((cat, index) => {
-                const wrapper = cardWrappers.current[index];
-                const inner = cardInners.current[index];
-                if (!wrapper || !inner) return;
+            // FIX 2: removed illegal useGSAP() hook call; inlined its callback
+            // directly here inside gsap.context (same scoping effect)
+            const cards = gsap.utils.toArray(".card");
 
-                const serviceItems = Array.from(wrapper.querySelectorAll(".service-item"));
-                const totalPx = CARD_ENTER_PX + serviceItems.length * PX_PER_SERVICE;
+            gsap.set(".number, .title", {
+                y: 50,
+                autoAlpha: 0,
+            });
 
-                // Set all hidden initially
-                gsap.set(inner, { opacity: 0, y: 56, scale: 0.97 });
-                gsap.set(serviceItems, { opacity: 0, y: 24 });
+            gsap.set(".service", {
+                y: 20,
+                autoAlpha: 0,
+            });
 
-                // Build a normalised (0→1) timeline for the card's lifecycle
-                const tl = gsap.timeline({ paused: true });
+            cards.forEach((card, i) => {
+                const number = card.querySelector(".number");
+                const title = card.querySelector(".title");
+                const services = card.querySelectorAll(".service");
 
-                // Card box enters (takes CARD_ENTER_PX worth of the scroll)
-                tl.to(inner, {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    ease: "power3.out",
-                    duration: CARD_ENTER_PX / totalPx,
-                }, 0);
-
-                // Service rows appear sequentially, each gets PX_PER_SERVICE px
-                serviceItems.forEach((item, i) => {
-                    const startNorm = (CARD_ENTER_PX + i * PX_PER_SERVICE) / totalPx;
-                    const durNorm = PX_PER_SERVICE / totalPx;
-                    tl.to(item, {
-                        opacity: 1,
-                        y: 0,
-                        ease: "expo.out",
-                        duration: durNorm,
-                    }, startNorm);
+                gsap.to(card, {
+                    scale: 0.8 + 0.2 * (i / (cards.length - 1)),
+                    scrollTrigger: {
+                        trigger: card,
+                        start: `top ${15 + 30 * i}px`,
+                        end: "bottom bottom",
+                        endTrigger: ".container",
+                        scrub: 2,
+                        pin: true,
+                        pinSpacing: false,
+                        invalidateOnRefresh: true,
+                        markers: true,
+                    },
                 });
 
-                // ScrollTrigger scrubs the timeline
                 ScrollTrigger.create({
-                    trigger: wrapper,
-                    start: "top top",
-                    end: () => `+=${totalPx}`,
-                    scrub: 1.5,
-                    pin: true,
-                    pinSpacing: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true,
-                    fastScrollEnd: true,
-                    animation: tl,
+                    trigger: card,
+                    start: "top center",
+                    once: true,
+
+                    onEnter: () => {
+                        const tl = gsap.timeline();
+
+                        tl.to([number, title], {
+                            y: 0,
+                            autoAlpha: 1,
+                            stagger: 0.1,
+                            duration: 0.6,
+                        });
+
+                        tl.to(
+                            services,
+                            {
+                                y: 0,
+                                autoAlpha: 1,
+                                stagger: 0.1,
+                                duration: 0.5,
+                            },
+                            "-=0.2"
+                        );
+                    },
                 });
             });
 
-        }, sectionRef);
+        });
 
         return () => ctx.revert();
     }, []);
@@ -171,10 +187,10 @@ const Services = () => {
     return (
         <section ref={sectionRef} className="relative mt-20">
             <style>{`
-                .hide-scroll::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
+            .hide-scroll::-webkit-scrollbar {
+                display: none;
+            }
+        `}</style>
 
             {/* ══════════════════════════════════════════════
           PHASE 1 — Horizontal scrolling heading
@@ -205,153 +221,32 @@ const Services = () => {
           Each wrapper is pinned independently by GSAP.
           The inner card box is what animates.
       ══════════════════════════════════════════════ */}
-            {categories.map((cat, index) => (
-                <div
-                    key={index}
-                    ref={(el) => (cardWrappers.current[index] = el)}
-                    style={{
-                        minHeight: "120vh",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "#fff",
-                        padding: "40px 24px",
-                        boxSizing: "border-box",
-                        marginTop: "20px"
-                    }}
-                >
-                    {/* Inner card — animated by GSAP */}
-                    <div
-                        ref={(el) => (cardInners.current[index] = el)}
-                        style={{
-                            width: "100%",
-                            maxWidth: "820px",
-                            background: "#0d0d0d",
-                            border: "1px solid #1e1e1e",
-                            borderRadius: "16px",
-                            overflow: "hidden",
-                            boxShadow: "0 12px 56px rgba(0,0,0,0.75)",
-                            willChange: "transform, opacity",
-                            transform: "translateZ(0)",
-                            backfaceVisibility: "hidden"
-                        }}
-                    >
-                        {/* ── Header row ── */}
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "20px",
-                                padding: "28px 40px",
-                                borderBottom: "1px solid #181818",
-                            }}
-                        >
-                            {/* Outlined number */}
-                            <span
-                                style={{
-                                    fontFamily: "'Arial Black', 'Arial', sans-serif",
-                                    fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-                                    fontWeight: 900,
-                                    color: "transparent",
-                                    WebkitTextStroke: "2px #2e2e2e",
-                                    lineHeight: 1,
-                                    flexShrink: 0,
-                                    letterSpacing: "-0.03em",
-                                    userSelect: "none",
-                                    minWidth: "80px",
-                                    color: "white"
-                                }}
-                            >
-                                {cat.number}
-                            </span>
+            <div className="container" ref={container}>
+                <div className="stacked-cards">
+                    {categories.map((category, index) => (
+                        <div className="card" key={index}>
+                            <div className="card-content">
+                                <div className="number">{category.number}</div>
 
-                            {/* Divider */}
-                            <span
-                                style={{
-                                    width: "1px",
-                                    height: "44px",
-                                    background: "#252525",
-                                    flexShrink: 0,
-                                }}
-                            />
+                                <h2 className="title">
+                                    {category.title}
+                                </h2>
+                            </div>
 
-                            {/* Title */}
-                            <span
-                                style={{
-                                    color: "#fff",
-                                    fontSize: "clamp(0.78rem, 4vw, 3vw)",
-                                    fontWeight: 600,
-                                    lineHeight: 1.35,
-                                    fontFamily: "'Arial', sans-serif",
-                                    flex: 1,
-                                    textAlign: "center"
-                                }}
-                            >
-                                {cat.title}
-                            </span>
+                            <div className="services-list">
+                                {category.services.map((service, serviceIndex) => (
+                                    <div className="service" key={serviceIndex}>
+                                        {service}
+                                        <span className="text-white text-2xl font-bold mr-3"><ArrowRight /></span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-
-                        {/* ── Service rows ── */}
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "7px",
-                                padding: "14px 20px 20px",
-                            }}
-                        >
-                            {cat.services.map((svc, si) => (
-                                <div
-                                    className="service-item"
-                                    key={si}
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        padding: "16px 20px",
-                                        background: "#1a1a1a",
-                                        borderRadius: "9px",
-                                        cursor: "pointer",
-                                        transition: "background 0.2s ease",
-                                        willChange: "transform, opacity",
-                                    }}
-                                    onMouseEnter={(e) =>
-                                        (e.currentTarget.style.background = "#252525")
-                                    }
-                                    onMouseLeave={(e) =>
-                                        (e.currentTarget.style.background = "#1a1a1a")
-                                    }
-                                >
-                                    <span
-                                        style={{
-                                            color: "#ffffffff",
-                                            fontSize: "clamp(0.78rem, 3vw, 1.7vw)",
-                                            fontWeight: 500,
-                                            fontFamily: "'Arial', sans-serif",
-                                            lineHeight: 1.4,
-                                        }}
-                                    >
-                                        {svc}
-                                    </span>
-                                    <span
-                                        style={{
-                                            color: "#fff",
-                                            fontSize: "35px",
-                                            flexShrink: 0,
-                                            marginLeft: "12px",
-                                        }}
-                                    >
-                                        →
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    ))}
                 </div>
-            ))}
+            </div>
 
         </section>
     );
 };
-
 export default Services;
