@@ -146,7 +146,6 @@ const Services = () => {
                         pin: true,
                         pinSpacing: false,
                         invalidateOnRefresh: true,
-                        markers: true,
                     },
                 });
 
