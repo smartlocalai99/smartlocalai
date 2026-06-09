@@ -61,7 +61,7 @@ const Home = () => {
           and digital growth solutions for modern businesses.
         </p>
 
-        <button className="bg-[#3b82f6] hover:bg-blue-600 text-white px-8 py-3.5 rounded-full font-semibold shadow-[0_10px_30px_rgba(59,130,246,0.35)] transition-all hover:-translate-y-1 text-[15px]">
+        <button className="bg-[#E7FF00] hover:bg-black hover:text-white text-black px-8 py-3.5 rounded-full font-bold shadow-[0_10px_30px_rgba(59,130,246,0.35)] transition-all hover:-translate-y-1 text-[15px]">
           Book Free Consultation
         </button>
       </div>

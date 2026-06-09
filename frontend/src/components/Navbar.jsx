@@ -19,7 +19,7 @@ const Navbar = () => {
 
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-3 mr-4">
-        <button className="bg-[#3b82f6] hover:bg-blue-600 text-white px-8 py-2.5 rounded-full font-medium transition-colors text-sm flex items-center gap-1">
+        <button className="bg-[#E7FF00] hover:bg-black hover:text-white text-black px-8 py-2.5 rounded-full font-medium transition-colors text-sm flex items-center gap-1">
           Contact <span className=""><ArrowUpRight size={20} /></span>
         </button>
       </div>

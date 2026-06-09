@@ -1,139 +1,258 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
+import React from "react";
+import footer_img from "../assets/footer_img.png";
 
 const Footer = () => {
-    const cardRef = useRef(null);
-    const bigTextRef = useRef(null);
+    return (
+        <footer className="relative bg-[#11170B] text-white overflow-hidden">
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
+            {/* Illustration */}
+            <div className="w-full h-[300px] sm:h-[450px] md:h-[650px] lg:h-[800px]">
+                <img
+                    src={footer_img}
+                    alt="footer illustration"
+                    className="w-full h-full object-cover"
+                />
+            </div>
 
-            // Card Animation
-            gsap.from(cardRef.current, {
-                y: 120,
-                opacity: 0,
-                duration: 1.5,
-                ease: "power4.out",
-            });
+            {/* Main Footer Content */}
+            <div className="relative px-6 sm:px-10 md:px-16 lg:px-24 pt-20 pb-10">
 
-            // Big Text Reveal
-            gsap.from(bigTextRef.current, {
-                scale: 0.8,
-                opacity: 0,
-                duration: 1,
-                delay: 0.2,
-                ease: "power4.out",
-            });
-
-            // Floating Motion
-            gsap.to(bigTextRef.current, {
-                y: -10,
-                duration: 3,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-            });
-
-        });
-
-        return () => ctx.revert();
-    }, []);
-
-return (
-    <footer className="bg-transparent px-6 pb-10 relative z-20 mt-50 md:-mt-20 overflow-hidden">
-
-        {/* Glass Card */}
-        <div
-            ref={cardRef}
-            className="
-                relative
-                rounded-[40px]
-                border
-                border-white/40
-                bg-white/20
-                backdrop-blur-sm
-                p-10
-                overflow-hidden
-                shadow-[0_8px_32px_0_rgba(0,0,0,0.03)]
-            "
-            style={{
-                boxShadow: 'inset 0 0 12px rgba(255, 255, 255, 0.2)'
-            }}
-        >
-            {/* Top Content */}
-            <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-10 mt-30">
-
-                {/* Company */}
-                <div>
-                    <h4 className="text-black/40 uppercase text-xs tracking-[3px] mb-5">
-                        Company
-                    </h4>
-                    <ul className="space-y-3 text-black/80 font-medium">
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Home</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">About Us</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Services</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Team</li>
-                    </ul>
+                {/* Huge Background Text */}
+                <div
+                    className="
+                    absolute
+                    inset-0
+                    flex
+                    items-center
+                    justify-center
+                    pointer-events-none
+                    select-none
+                    mt-10
+                    "
+                >
+                    <h1
+                        className="
+                        text-[4rem]
+                        sm:text-[7rem]
+                        md:text-[10rem]
+                        lg:text-[20rem]
+                        font-black
+                        leading-none
+                        text-white/[0.03]
+                        text-center
+                        "
+                    >
+                        SMART
+                        <br />
+                        LOCAL AI
+                    </h1>
                 </div>
 
-                {/* Resources */}
-                <div>
-                    <h4 className="text-black/40 uppercase text-xs tracking-[3px] mb-5">
-                        Resources
-                    </h4>
-                    <ul className="space-y-3 text-black/80 font-medium">
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Blog</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Contact Us</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Tutorials</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Support</li>
-                    </ul>
+                {/* Footer Links */}
+                <div
+                    className="
+                    relative
+                    z-10
+                    grid
+                    grid-cols-1
+                    sm:grid-cols-2
+                    md:grid-cols-3
+                    gap-14
+                    justify-items-center
+                    mx-auto
+                    "
+                >
+
+                    {/* Company */}
+                    <div>
+                        <h3 className="text-[#E7FF00] text-lg font-semibold mb-6">
+                            Company
+                        </h3>
+
+                        <ul className="space-y-4 text-sm text-white/70">
+
+                            <li className="hover:text-lime-400 transition-all duration-300 cursor-pointer">
+                                Home
+                            </li>
+
+                            <li className="hover:text-lime-400 transition-all duration-300 cursor-pointer">
+                                About Us
+                            </li>
+
+                            <li className="hover:text-lime-400 transition-all duration-300 cursor-pointer">
+                                Team
+                            </li>
+
+                            <li className="hover:text-lime-400 transition-all duration-300 cursor-pointer">
+                                Services
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    {/* Product */}
+                    <div>
+                        <h3 className="text-[#E7FF00] text-lg font-semibold mb-6">
+                            Product
+                        </h3>
+
+                        <ul className="space-y-4 text-sm text-white/70">
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Features
+                            </li>
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Careers
+                            </li>
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                How It Works
+                            </li>
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Contact
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    {/* Laws */}
+                    <div>
+                        <h3 className="text-[#E7FF00] text-lg font-semibold mb-6">
+                            Laws
+                        </h3>
+
+                        <ul className="space-y-4 text-sm text-white/70">
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Cookie Policy
+                            </li>
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Privacy Policy
+                            </li>
+
+                            <li className="hover:text-[#E7FF00] transition-all duration-300 cursor-pointer">
+                                Terms & Conditions
+                            </li>
+
+                        </ul>
+                    </div>
+
                 </div>
 
-                {/* Social */}
-                <div>
-                    <h4 className="text-black/40 uppercase text-xs tracking-[3px] mb-5">
-                        Social Media
-                    </h4>
-                    <ul className="space-y-3 text-black/80 font-medium">
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Instagram</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Facebook</li>
-                        <li className="hover:translate-x-1 transition duration-300 cursor-pointer hover:text-black">Twitter</li>
-                    </ul>
-                </div>
+                {/* Newsletter */}
+                <div
+                    className="
+                    relative
+                    z-10
+                    flex
+                    flex-col
+                    lg:flex-row
+                    items-start
+                    lg:items-center
+                    justify-center
+                    gap-8
+                    mt-24
+                    "
+                >
 
-                {/* Email */}
-                <div>
-                    <h4 className="text-black/40 uppercase text-xs tracking-[3px] mb-5">
-                        WE'D LOVE TO HEAR FROM YOU
-                    </h4>
-                    <p className="text-black font-semibold text-lg">
-                        companyname@gmail.com
+                    <p className="text-lg text-white/90 font-semibold">
+                        Subscribe on our newsletter :
                     </p>
+
+                    <form
+                        className="
+                        flex
+                        items-center
+                        bg-white
+                        rounded-full
+                        overflow-hidden
+                        w-full
+                        max-w-[550px]
+                        relative
+                        "
+                    >
+
+                        <input
+                            type="email"
+                            placeholder="Enter Your Mail Here....."
+                            className="
+                            flex-1
+                            px-6
+                            py-4
+                            text-sm
+                            text-black
+                            bg-transparent
+                            placeholder:text-black/70
+                            focus:outline-none
+                            "
+                        />
+
+                        <button
+                            type="submit"
+                            className="
+                            bg-[#E7FF00]
+                            text-black
+                            absolute
+                            right-0
+                            px-8
+                            py-2
+                            text-md
+                            font-semibold
+                            hover:bg-lime-300
+                            transition-all
+                            duration-300
+                            mr-2
+                            rounded-full
+                            "
+                        >
+                            Submit
+                        </button>
+
+                    </form>
+
                 </div>
+
+                {/* Bottom */}
+                <div
+                    className="
+                    relative
+                    z-10
+                    flex
+                    flex-col
+                    md:flex-row
+                    items-center
+                    justify-between
+                    gap-4
+                    mt-20
+                    pt-6
+                    border-t
+                    border-white/10
+                    text-xs
+                    text-white/100
+                    "
+                >
+
+                    <p>
+                        © 2026 All Rights Reserved
+                    </p>
+
+                    <p className="cursor-pointer hover:text-lime-400 transition-all duration-300">
+                        Terms & Conditions
+                    </p>
+
+                    <p className="cursor-pointer hover:text-lime-400 transition-all duration-300">
+                        Privacy Policy
+                    </p>
+
+                </div>
+
             </div>
 
-            {/* Big Typography */}
-            <div
-                ref={bigTextRef}
-                className="relative z-10 text-center leading-[0.82] mt-10 select-none"
-            >
-                <h1 className="text-center text-[6rem] sm:text-[8rem] md:text-[12rem] lg:text-[16rem] xl:text-[20rem] font-black tracking-[-10px] text-black drop-shadow-[0_8px_20px_rgba(0,0,0,0.06)]">
-                    SMART
-                </h1>
-                <h1 className="text-center text-[5rem] sm:text-[7rem] md:text-[10rem] lg:text-[14rem] xl:text-[17rem] font-black tracking-[-8px] text-black drop-shadow-[0_8px_20px_rgba(0,0,0,0.06)]">
-                    LOCAL AI
-                </h1>
-            </div>
-
-            {/* Bottom */}
-            <div className="relative z-10 mt-16 flex flex-col md:flex-row justify-between items-center text-sm text-black/50 gap-4">
-                <p>© 2026 All Rights Reserved</p>
-                <p className="cursor-pointer hover:text-black transition">Terms & Conditions</p>
-                <p className="cursor-pointer hover:text-black transition">Privacy Policy</p>
-            </div>
-        </div>
-    </footer>
-);
+        </footer>
+    );
 };
 
 export default Footer;
