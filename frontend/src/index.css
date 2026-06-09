@@ -87,7 +87,6 @@
     justify-content: space-between;
     align-items: center;
 }
-
 @keyframes scroll {
     0% {
         transform: translateX(0);
@@ -114,4 +113,9 @@
 
 .animate-scroll-reverse {
     animation: scrollReverse 30s linear infinite;
+}
+
+
+.team-row:hover .team-track {
+    animation-play-state: paused;
 }
